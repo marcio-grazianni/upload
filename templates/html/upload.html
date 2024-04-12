@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Upload de Arquivo</title>
+    </head>
+    <body>
+        <h1>Upload de Arquivo</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>
+                <label for="id_file" style="display: block; margin-bottom: 5px;">Arquivo:</label>
+                <!-- A propriedade name do input deve ter o mesmo nome do campo em forms.py -->
+                <!-- Esse nome também deve ser igual ao request.FILES['arquivo'] -->
+                <input id="id_file" name="arquivo" type="file" required>
+            </p>
+            <button type="submit">Upload</button>
+        </form>
+    </body>
+</html>
