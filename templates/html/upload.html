@@ -10,14 +10,14 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="card-header">
-                Upload file
+                Upload de arquivo
             </div>
 
             <div class="card-body">
                 <div class="card-body-content">
                     <div class="form-group">
                         <label id="lblIdArquivo" for="id_file">
-                            Upload de Arquivo
+                            Arquivo
                         </label>
                         <!-- A propriedade name do input deve ter o mesmo nome do campo em forms.py -->
                         <!-- Esse nome também deve ser igual ao request.FILES['arquivo'] -->
@@ -27,7 +27,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{% url 'file_upload' %}" id="btnCancelar" class="btn btn-outline-danger">Cancelar</a>
+                <a href="{% url 'file_upload' %}" class="btn btn-outline-danger">Cancelar</a>
                 <button id="btnEnviar" type="submit" class="btn btn-primary">Enviar</button>
             </div>
         </form>

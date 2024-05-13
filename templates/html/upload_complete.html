@@ -1,19 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Upload Completo</title>
-</head>
-<body>
-    <h1>Upload Completo</h1>
-    <p>Seu arquivo foi processado com sucesso!</p>
+{% extends 'base.html' %}
 
-    <ol>
-        {% for line in lines %}
-            <li>{{ line }}</li>
-        {% endfor %}
-    </ol>
+{% load static %}
 
-    <a class="btn btn-primary" href="{% url 'upload' %}">Voltar</a>
+{% block content %}
+<div class="container-flex">
+    <div class="card card-shadow1">
+        <!-- O form sempre deverá estar dentro de um card -->
+        <!-- Se não for utilizado o container do bootstrap -->
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="card-header">
+                Upload completo
+            </div>
 
-</body>
-</html>
+            <div class="card-body card-body-content-scroll">
+                <div class="card-body-content">
+                    <div class="form-group form-group-without-margin">
+                        <ol>
+                            {% for line in lines %}
+                                <li>{{ line }}</li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <a href="{% url 'file_upload' %}" class="btn btn-outline-danger">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

@@ -111,6 +111,17 @@ body {
     margin: 0;
 }
 
+.card-body-content-scroll {
+    padding-top: 1rem !important;
+    padding-bottom: 0rem !important;
+    overflow: auto;
+    max-height: calc(100vh - 20rem);
+}
+
+.form-group-without-margin {
+    margin-bottom: 0rem !important;
+}
+
 .card-footer {
     display: flex;
     flex-direction: row;
