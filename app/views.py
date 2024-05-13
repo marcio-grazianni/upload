@@ -9,8 +9,9 @@ def file_upload(request) -> HttpResponse:
         form = UploadFileForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             for line in request.FILES['arquivo']:
-                lines.append(line.decode('utf-8').strip())
-                print(line.decode('utf-8').strip())
+                if line.decode('utf-8').strip():
+                    lines.append(line.decode('utf-8').strip())
+                    print(line.decode('utf-8').strip())
 
             return render(request=request, template_name='upload_complete.html', context={'lines': lines})
     else:
