@@ -1,19 +1,39 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Upload de Arquivo</title>
-    </head>
-    <body>
-        <h1>Upload de Arquivo</h1>
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-flex">
+    <div class="card card-shadow1">
+        <!-- O form sempre deverá estar dentro de um card -->
+        <!-- Se não for utilizado o container do bootstrap -->
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <p>
-                <label for="id_file" style="display: block; margin-bottom: 5px;">Arquivo:</label>
-                <!-- A propriedade name do input deve ter o mesmo nome do campo em forms.py -->
-                <!-- Esse nome também deve ser igual ao request.FILES['arquivo'] -->
-                <input id="id_file" name="arquivo" type="file" required>
-            </p>
-            <button type="submit">Upload</button>
+            <div class="card-header">
+                Upload file
+            </div>
+
+            <div class="card-body">
+                <div class="card-body-content">
+                    <div class="form-group">
+                        <label id="lblIdArquivo" for="id_file">
+                            Upload de Arquivo
+                        </label>
+                        <!-- A propriedade name do input deve ter o mesmo nome do campo em forms.py -->
+                        <!-- Esse nome também deve ser igual ao request.FILES['arquivo'] -->
+                        <input class="form-control" id="id_file" name="arquivo" type="file" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <a href="{% url 'file_upload' %}" id="btnCancelar" class="btn btn-outline-danger">Cancelar</a>
+                <button id="btnEnviar" type="submit" class="btn btn-primary">Enviar</button>
+            </div>
         </form>
-    </body>
-</html>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
