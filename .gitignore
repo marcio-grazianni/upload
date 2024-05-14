@@ -3,6 +3,7 @@
 *.swp
 *~
 *.ps1
+*.csv
 __pycache__
 venv_upload
 db.sqlite3

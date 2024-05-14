@@ -7,7 +7,7 @@
     <div class="card card-shadow1">
         <!-- O form sempre deverá estar dentro de um card -->
         <!-- Se não for utilizado o container do bootstrap -->
-        <form method="post" enctype="multipart/form-data">
+        <form id="frmEnviar" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="card-header">
                 Upload de arquivo
@@ -36,4 +36,5 @@
 {% endblock %}
 
 {% block javascript %}
+<script src="{% static 'js/upload.js' %}"></script>
 {% endblock %}
