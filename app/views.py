@@ -3,6 +3,10 @@ from django.shortcuts import render
 from app.forms import UploadFileForm
 
 
+def principal(request) -> HttpResponse:
+    return render(request=request, template_name='principal.html')
+
+
 def file_upload(request) -> HttpResponse:
     lines: list = []
     if request.method == 'POST':
