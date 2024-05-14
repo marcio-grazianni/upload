@@ -16,6 +16,17 @@
             <div class="card-body card-body-content-scroll">
                 <div class="card-body-content">
                     <div class="form-group form-group-without-margin">
+                        <!-- Info dict -->
+                        {% for key, value in info.items %}
+                            <strong>{{ key }}:</strong> {{ value }} <br>
+                        {% endfor %}
+
+                        <!-- Extensão csv detectada -->
+                        {% if info.extensao_arquivo == "csv" %}
+                            <strong>Extensão csv detectada.</strong> <br>
+                        {% endif %}
+
+                        <!-- Lines -->
                         <ol>
                             {% for line in lines %}
                                 <li>{{ line }}</li>
