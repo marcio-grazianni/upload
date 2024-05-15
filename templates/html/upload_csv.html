@@ -10,7 +10,7 @@
         <form id="frmEnviar" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="card-header">
-                Upload de arquivo
+                Upload de arquivo CSV
             </div>
 
             <div class="card-body">
@@ -27,7 +27,7 @@
             </div>
 
             <div class="card-footer">
-                <a href="{% url 'upload' %}" class="btn btn-outline-danger">Cancelar</a>
+                <a href="{% url 'upload_csv' %}" class="btn btn-outline-danger">Cancelar</a>
                 <button id="btnEnviar" type="submit" class="btn btn-primary">Enviar</button>
             </div>
         </form>
@@ -36,5 +36,5 @@
 {% endblock %}
 
 {% block javascript %}
-<script src="{% static 'js/upload.js' %}"></script>
+<script src="{% static 'js/upload_csv.js' %}"></script>
 {% endblock %}

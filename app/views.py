@@ -9,7 +9,27 @@ def principal(request) -> HttpResponse:
     return render(request=request, template_name='principal.html')
 
 
-def file_upload(request) -> HttpResponse:
+def upload(request) -> HttpResponse:
+    lines = []
+    if request.method == 'POST':
+        formulario = UploadFileForm(data=request.POST, files=request.FILES)
+        arquivo = request.FILES['arquivo']
+
+        if formulario.is_valid():
+            for line in arquivo:
+                line = line.decode('utf-8').strip()
+                if line:
+                    lines.append(line)
+                    print(line)
+            print("-" * 100)
+
+            return render(request=request, template_name='upload_complete.html', context={'lines': lines})
+    else:
+        formulario = UploadFileForm()
+    return render(request=request, template_name='upload.html', context={'form': formulario})
+
+
+def upload_csv(request) -> HttpResponse:
     lines: list = []
     info: dict = {}
     if request.method == 'POST':
@@ -44,7 +64,7 @@ def file_upload(request) -> HttpResponse:
                         print(line)
             print("-" * 100)
 
-            return render(request=request, template_name='upload_complete.html', context={'lines': lines, 'info': info})
+            return render(request=request, template_name='upload_csv_complete.html', context={'lines': lines, 'info': info})
     else:
         formulario = UploadFileForm()
-    return render(request=request, template_name='upload.html', context={'form': formulario})
+    return render(request=request, template_name='upload_csv.html', context={'form': formulario})

@@ -3,5 +3,6 @@ from app import views
 
 urlpatterns = [
     path(route='', view=views.principal, name='principal'),
-    path(route='file_upload/', view=views.file_upload, name='file_upload'),
+    path(route='upload/', view=views.upload, name='upload'),
+    path(route='upload_csv/', view=views.upload_csv, name='upload_csv'),
 ]
