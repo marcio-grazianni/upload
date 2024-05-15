@@ -4,6 +4,7 @@ import pandas as pd
 from io import StringIO
 from django.shortcuts import render
 from app.forms import UploadFileForm
+from templates.src import funcoes as fn
 
 
 def principal(request):
@@ -31,7 +32,7 @@ def upload(request):
 
 
 def upload_csv(request):
-    lines = []
+    csv_lines = []
     info = {}
     if request.method == 'POST':
         formulario = UploadFileForm(data=request.POST, files=request.FILES)
@@ -58,27 +59,31 @@ def upload_csv(request):
                         if not start_csv_data and "Data" in line:
                             start_csv_data = True
                         if start_csv_data:
-                            lines.append(line)
+                            csv_lines.append(line)
                             # print(line)
                     else:
-                        lines.append(line)
+                        csv_lines.append(line)
                         # print(line)
             if info['extensao_arquivo'] == "csv":
-                data_frame = processa_data_frame(request, lines, info['nome_arquivo'])
-            return render(request=request, template_name='upload_csv_complete.html', context={'lines': lines, 'info': info, 'data_frame': data_frame})
+                # process_data_frame(request, csv_lines, info['nome_arquivo'])
+                data_frame, csv_type = process_data_frame(request=request, csv_lines=csv_lines, file_name=info['nome_arquivo'])
+                info['data_frame'] = data_frame
+                info['csv_type'] = csv_type
+            return render(request=request, template_name='upload_csv_complete.html', context={'lines': csv_lines, 'info': info})
     else:
         formulario = UploadFileForm()
     return render(request=request, template_name='upload_csv.html', context={'form': formulario, 'titulo':'Upload CSV'})
 
 
-def processa_data_frame(request, linhas, nome_arquivo):
-    data_string = "\n".join(linhas)
-    data_io = StringIO(data_string)
-    delimiter = "," if "nome_arquivo" == "nubank" else ";"
-    df = pd.read_csv(data_io, delimiter=delimiter).to_dict(orient="records")
-    print(f"nome_arquivo: [{nome_arquivo}]")
+def process_data_frame(request, csv_lines, file_name):
+    csv_type = fn.detect_csv_type(csv_lines=csv_lines)
+    delimiter = "," if csv_type == fn.CSVType.NUBANK else ";"
+    data_string = "\n".join(csv_lines)
+    data_io = StringIO(initial_value=data_string)
+    df = pd.read_csv(filepath_or_buffer=data_io, delimiter=delimiter).to_dict(orient="records")
+    print(f"file_name: [{file_name}]")
     print(f"delimiter: [{delimiter}]")
     for line in df:
         print(line)
     print("-" * 90)
-    return df
+    return df, csv_type
