@@ -40,16 +40,16 @@ def upload_csv(request):
 
         # Variáveis para colocar no dicionário "info"
         nome_completo_arquivo = arquivo.name
-        nome_arquivo, extensao_arquivo = os.path.splitext(nome_completo_arquivo)
+        nome_arquivo, extensao_arquivo = os.path.splitext(p=nome_completo_arquivo)
         info['nome_completo_arquivo'] = nome_completo_arquivo
         info['nome_arquivo'] = nome_arquivo
         info['extensao_arquivo'] = extensao_arquivo.replace(".", "")
-        print("-" * 90)
-        for key, value in info.items():
-            print(f'{key}: {value}')
-        if info['extensao_arquivo'] == "csv":
-            print("Extensão csv detectada.")
-        print("-" * 90)
+        # print("-" * 90)
+        # for key, value in info.items():
+        #     print(f'{key}: {value}')
+        # if info['extensao_arquivo'] == "csv":
+        #     print("Extensão csv detectada.")
+        # print("-" * 90)
         if formulario.is_valid():
             start_csv_data = False
             for line in arquivo:
@@ -65,9 +65,8 @@ def upload_csv(request):
                         csv_lines.append(line)
                         # print(line)
             if info['extensao_arquivo'] == "csv":
-                # process_data_frame(request, csv_lines, info['nome_arquivo'])
-                data_frame, csv_type = process_data_frame(request=request, csv_lines=csv_lines, file_name=info['nome_arquivo'])
-                info['data_frame'] = data_frame
+                df_dict, csv_type = create_data_frame(request=request, csv_lines=csv_lines, file_name=info['nome_arquivo'])
+                info['df_dict'] = df_dict
                 info['csv_type'] = csv_type
             return render(request=request, template_name='upload_csv_complete.html', context={'lines': csv_lines, 'info': info})
     else:
@@ -75,15 +74,42 @@ def upload_csv(request):
     return render(request=request, template_name='upload_csv.html', context={'form': formulario, 'titulo':'Upload CSV'})
 
 
-def process_data_frame(request, csv_lines, file_name):
+def create_data_frame(request, csv_lines, file_name):
     csv_type = fn.detect_csv_type(csv_lines=csv_lines)
-    delimiter = "," if csv_type == fn.CSVType.NUBANK else ";"
+    csv_delimiter = fn.detect_csv_delimiter(csv_type=csv_type)
+
     data_string = "\n".join(csv_lines)
     data_io = StringIO(initial_value=data_string)
-    df = pd.read_csv(filepath_or_buffer=data_io, delimiter=delimiter).to_dict(orient="records")
-    print(f"file_name: [{file_name}]")
-    print(f"delimiter: [{delimiter}]")
-    for line in df:
-        print(line)
+
+    df = pd.read_csv(filepath_or_buffer=data_io, delimiter=csv_delimiter)
+    if csv_type == fn.CSVType.INTER:
+        df['Valor'] = df['Valor'].str.replace(pat=',', repl='.').astype(dtype=float)
+    df_filtered = df[df['Valor'] < 0]
+    df_filtered = df_filtered[~df['Descrição'].str.contains(pat="MARCIO GRAZIANNI")]
+    df_dict = df_filtered.to_dict(orient="records")
+
     print("-" * 90)
-    return df, csv_type
+    print(f"file_name: [{file_name}]")
+    print(f"csv_type: [{csv_type}]")
+    print(f"delimiter: [{csv_delimiter}]")
+
+    print("-" * 90)
+    print("colunas:")
+    for coluna in df.columns:
+        print(coluna)
+
+    print("-" * 90)
+    print("linhas:")
+    for line in df_dict:
+        print(line)
+
+    print("-" * 90)
+    print("total df_filtered:")
+    print(len(df_filtered))
+
+    print("-" * 90)
+    print("total df_dict:")
+    print(len(df_dict))
+    print("-" * 90)
+
+    return df_dict, csv_type
